@@ -6,7 +6,7 @@ import db from "./config/db";
 async function conectDB(){
     try {
         await db.authenticate()
-        db.sync()
+        await db.sync({ alter: true })
         console.log("Conexión a la base de datos establecida");
     } catch (error) {
         console.log(error)
@@ -18,6 +18,8 @@ conectDB()
 
 const server = express();
 
-server.use('/api/products', router)
+server.use(express.json())
+
+server.use('/api/appointments', router)
 
 export default server;

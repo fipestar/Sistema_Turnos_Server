@@ -10,8 +10,8 @@ export enum  AppointmentStatus {
     tableName: 'appointments',
     timestamps: true,
     indexes: [
-        { fields: ['professionalId', 'startAt'] },
-        { fields: ['professionalId', 'endAt'] },
+        { fields: ['professionalName', 'startAt'] },
+        { fields: ['professionalName', 'endAt'] },
         { fields: ['status']}
     ]
 })
@@ -31,18 +31,12 @@ export class Appointment extends Model {
     declare patientName: string
 
     @Column({
-        type: DataType.STRING(80),
-        allowNull: false
-    })
-    declare professionalId: string
-
-    @Column({
         type: DataType.STRING(120),
         allowNull: false
     })
     declare professionalName: string
 
-    @Column({
+    @Column({ 
         type: DataType.DATE,
         allowNull: false
     })
