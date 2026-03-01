@@ -1,4 +1,4 @@
-import {Table, Column, Model, DataType, Default, BeforeValidate, PrimaryKey, AllowNull} from 'sequelize-typescript'
+import {Table, Column, Model, DataType, Default, BeforeValidate, PrimaryKey, AutoIncrement} from 'sequelize-typescript'
 
 export enum  AppointmentStatus {
     PENDIENTE = 'Pendiente',
@@ -17,12 +17,12 @@ export enum  AppointmentStatus {
 })
 
 export class Appointment extends Model {
-    @Default(DataType.UUIDV4)
+    @AutoIncrement
+    @PrimaryKey
     @Column({
-        type: DataType.UUID,
-        primaryKey: true
+        type: DataType.INTEGER
     })
-    declare id: string
+    declare id: number
 
     @Column({
         type: DataType.STRING(120),
