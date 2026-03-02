@@ -14,12 +14,18 @@ export async function conectDB(){
     }
 }
 
-conectDB()
-
 const server = express();
 
 server.use(express.json())
 
+server.get('/api', (req, res) => {
+    res.json({ msg: 'Desde API' })
+})
+
 server.use('/api/appointments', router)
+
+if (process.env.NODE_ENV !== 'test') {
+    conectDB()
+}
 
 export default server;

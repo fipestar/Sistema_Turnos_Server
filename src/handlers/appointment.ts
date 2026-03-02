@@ -4,7 +4,7 @@ import { Appointment } from '../models/Appointment.model'
 export const createAppointment = async (req: Request, res: Response) => {
     try {
         const appointment = await Appointment.create(req.body)
-        res.json({data: appointment})
+        res.status(201).json({data: appointment})
     } catch (error) {
         console.error('Error al crear la cita:', error)
     }

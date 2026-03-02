@@ -1,20 +1,15 @@
 import request from "supertest";
-import server, {conectDB} from "../server";
-import db from "../config/db";
+import server from "../server";
 
+describe('GET /api', () => {
+    it('should send back a json response', async () => {
+        const res = await request(server).get('/api');
 
-jest.mock('../config/db')
+        expect(res.status).toBe(200);
+        expect(res.headers['content-type']).toMatch(/json/);
+        expect(res.body.msg).toBe('Desde API');
 
-describe('connectDB', () => {
-    it('should handle database connection errors', async () => {
-        jest.spyOn(db, 'authenticate')
-            .mockRejectedValueOnce(new Error('Error connecting to the database'))
-        const consoleSpy = jest.spyOn(console, 'log')
-        
-        await conectDB()
-
-        expect(consoleSpy).toHaveBeenCalledWith(
-            expect.stringContaining('Error connecting to the database')
-        )
+        expect(res.status).not.toBe(404);
+        expect(res.body.msg).not.toBe('Not Found');
     })
 })

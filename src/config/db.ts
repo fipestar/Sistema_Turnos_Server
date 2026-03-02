@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript'
 import dotenv from 'dotenv'
 import { Appointment } from '../models/Appointment.model'
-dotenv.config()
+dotenv.config({ quiet: true })
 
 const DATABASE_URL = process.env.DATABASE_URL as string
 
