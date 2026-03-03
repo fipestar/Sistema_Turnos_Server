@@ -46,6 +46,17 @@ router.post("/",
 
 router.put("/:id",
     param('id').isInt().withMessage('ID debe ser un número entero'),
+
+    body().custom((value, { req }) => {
+        const allowedFields = ['patientName', 'professionalName', 'startAt', 'endAt', 'status', 'notes']
+        const provided = Object.keys(req.body ?? {})
+        const hasAtLeastOne = provided.some((k) => allowedFields.includes(k))
+        if (!hasAtLeastOne) {
+            throw new Error('Debe enviar al menos un campo para actualizar')
+        }
+        return true
+    }),
+
     body('patientName')
         .trim()
         .optional()
@@ -60,7 +71,10 @@ router.put("/:id",
     body('endAt')
         .optional()
         .isISO8601().withMessage('endAt debe ser una fecha válida ISO8601')
-        .custom((value, { req }) => new Date(value) > new Date(req.body.startAt)).withMessage('endAt debe ser mayor que startAt'),
+        .custom((value, { req }) => {
+            if (!req.body.startAt) return true
+            return new Date(value) > new Date(req.body.startAt)
+        }).withMessage('endAt debe ser mayor que startAt'),
     body('status')
         .optional()
         .isIn([

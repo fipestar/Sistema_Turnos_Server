@@ -7,6 +7,7 @@ export const createAppointment = async (req: Request, res: Response) => {
         res.status(201).json({data: appointment})
     } catch (error) {
         console.error('Error al crear la cita:', error)
+        res.status(500).json({error: 'Error interno del servidor'})
     }
 }
 
@@ -15,14 +16,21 @@ export const getAppointments = async (req: Request, res: Response) => {
         const appointments = await Appointment.findAll()
         res.json({data: appointments})
     } catch (error) {
-        console.error('Error al obtener las citas:', error) 
+        console.error('Error al obtener las citas:', error)
+        res.status(500).json({error: 'Error interno del servidor'})
     }
 }
 
 export const getAppointmentById = async (req: Request, res: Response) => {
     try {
         const {id} = req.params
-        const appointment = await Appointment.findByPk(Array.isArray(id) ? id[0] : id)
+        const parsedId = Number(Array.isArray(id) ? id[0] : id)
+
+        if (!Number.isInteger(parsedId)) {
+            return res.status(400).json({ error: 'ID debe ser un número entero' })
+        }
+
+        const appointment = await Appointment.findByPk(parsedId)
         if(!appointment){
             return res.status(404).json({error: 'Cita no encontrada'})
         }
@@ -36,6 +44,11 @@ export const getAppointmentById = async (req: Request, res: Response) => {
 
 export const updateAppointment = async (req: Request, res: Response) => {
     const {id} = req.params
+    const parsedId = Number(Array.isArray(id) ? id[0] : id)
+
+        if (!Number.isInteger(parsedId)) {
+            return res.status(400).json({ error: 'ID debe ser un número entero' })
+        }
     const appointment = await Appointment.findByPk(Array.isArray(id) ? id[0] : id)
     if(!appointment){
         return res.status(404).json({error: 'Cita no encontrada'})
