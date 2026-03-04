@@ -97,6 +97,11 @@ export const updateAppointmentStatus = async (req: Request, res: Response) => {
 
 export const deleteAppointment = async (req: Request, res: Response) => {
     const {id} = req.params
+    const parsedId = Number(Array.isArray(id) ? id[0] : id)
+
+        if (!Number.isInteger(parsedId)) {
+            return res.status(400).json({ error: 'ID debe ser un número entero' })
+        }
     const appointment = await Appointment.findByPk(Array.isArray(id) ? id[0] : id)
     if(!appointment){
         return res.status(404).json({error: 'Cita no encontrada'})

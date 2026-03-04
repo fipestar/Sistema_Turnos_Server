@@ -89,7 +89,19 @@ router.put("/:id",
     updateAppointment
 )
 
-router.patch("/:id/status", updateAppointmentStatus)
+router.patch("/:id/status",
+    param('id').isInt().withMessage('ID debe ser un número entero'),
+    body('status')
+        .notEmpty().withMessage('El estado es obligatorio')
+        .bail()
+        .isIn([
+            AppointmentStatus.PENDIENTE,
+            AppointmentStatus.CONFIRMADO,
+            AppointmentStatus.CANCELADO
+        ]).withMessage('Estado inválido'),
+    handleInputErrors,
+    updateAppointmentStatus
+)
 
 router.delete("/:id",
     param('id').isInt().withMessage('ID debe ser un número entero'),
